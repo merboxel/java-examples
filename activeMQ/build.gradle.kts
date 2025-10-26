@@ -12,6 +12,7 @@ description = "Example project for activeMQ"
 val jacksonVersion = "3.0.1"
 val xmlBind = "4.0.4"
 val jaxB = "4.0.6"
+val httpclient5 = "5.5.1"
 
 java {
 	toolchain {
@@ -31,6 +32,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-annotations:3.0-rc5")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:$xmlBind")
     implementation("org.glassfish.jaxb:jaxb-runtime:$jaxB")
+    implementation("org.apache.httpcomponents.client5:httpclient5:$httpclient5")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:activemq")
