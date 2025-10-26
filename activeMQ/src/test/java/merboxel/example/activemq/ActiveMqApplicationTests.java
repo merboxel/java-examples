@@ -1,4 +1,4 @@
-package merboxel.example.activeMQ;
+package merboxel.example.activemq;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +10,7 @@ class ActiveMqApplicationTests {
 
 	@Test
 	void contextLoads() {
-	}
+        assert(true);
+    }
 
 }

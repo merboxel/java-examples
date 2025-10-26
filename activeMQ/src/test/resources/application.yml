@@ -4,11 +4,27 @@ spring:
 
 activemq:
   listener:
-    - client-id: customer1
-      subscription: sub1
+    jsonToJson:
+      client_id: 1cae906c-ea48-4f10-b3b0-29c519147f3f
+      subscription: 5a11d8c1-d270-48b4-a9bf-631a6ea93c2f
       destination: example-topic-1
-      handler-bean: customer1
-    - client-id: customer2
-      subscription: sub2
+      handler-bean: jsonToJson
+      outbound: "https://endpoint1.dummy"
+    jsonToXml:
+      client_id: f6286d7a-008a-41b4-9112-c14f3b6f9f4c
+      subscription: b5c2d6bd-cb36-4a2d-a209-aff0defe45e0
       destination: example-topic-2
-      handler-bean: customer2
+      handler-bean: jsonToXml
+      outbound: "https://endpoint2.dummy"
+    stringToJson:
+      client_id: cbb7c2b6-c75f-4b26-8b84-edb0585dc4b7
+      subscription: a2394bbb-424d-43de-b587-61bd26654240
+      destination: example-topic-1
+      handler-bean: stringToJson
+      outbound: "https://endpoint3.dummy"
+    stringToXml:
+      client_id: 66658676-de85-48af-93f0-07926afe8d75
+      subscription: bdaed0c8-dd35-42d8-89b7-717b913de628
+      destination: example-topic-1
+      handler-bean: stringToXml
+      outbound: "https://endpoint4.dummy"

@@ -1,4 +1,4 @@
-package merboxel.example.activeMQ.handler;
+package merboxel.example.activemq.handler;
 
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,10 @@
-package merboxel.example.activeMQ;
+package merboxel.example.activemq;
 
 import org.springframework.boot.SpringApplication;
 
 public class TestActiveMqApplication {
 
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		SpringApplication.from(ActiveMqApplication::main).with(TestcontainersConfiguration.class).run(args);
 	}
 

@@ -1,16 +1,18 @@
-package merboxel.example.activeMQ.listener;
+package merboxel.example.activemq.listener;
 
 import jakarta.annotation.PostConstruct;
-import merboxel.example.activeMQ.config.ActiveMQListenerProperties;
-import merboxel.example.activeMQ.handler.ActiveMQTopicMessageHandlerStrategy;
+import merboxel.example.activemq.config.ActiveMQFactoryProperties;
+import merboxel.example.activemq.config.ActiveMQListenerProperties;
+import merboxel.example.activemq.handler.ActiveMQTopicMessageHandlerStrategy;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerEndpointRegistry;
 import org.springframework.jms.config.SimpleJmsListenerEndpoint;
+
+import java.util.List;
 
 
 @Configuration
@@ -18,34 +20,29 @@ public class DynamicListenerLoader {
 
     private static final Logger log = LoggerFactory.getLogger(DynamicListenerLoader.class);
 
-    @Value("${spring.activemq.broker-url}")
-    private String brokerUrl;
-
-    @Value("${spring.activemq.user}")
-    private String username;
-
-    @Value("${spring.activemq.password}")
-    private String password;
+    private final ActiveMQFactoryProperties activeMQFactoryProperties;
 
     private final ActiveMQListenerProperties listenerProperties;
 
     private final JmsListenerEndpointRegistry registry;
 
-    private final ActiveMQTopicMessageHandlerStrategy topicMEssageHandlerStrategy;
+    private final ActiveMQTopicMessageHandlerStrategy topicMessageHandlerStrategy;
 
-    public DynamicListenerLoader(ActiveMQListenerProperties listenerProperties,
+    public DynamicListenerLoader(ActiveMQFactoryProperties activeMQFactoryProperties,
+                                    ActiveMQListenerProperties listenerProperties,
                                  JmsListenerEndpointRegistry registry,
-                                 ActiveMQTopicMessageHandlerStrategy topicMEssageHandlerStrategy) {
+                                 ActiveMQTopicMessageHandlerStrategy topicMessageHandlerStrategy) {
+        this.activeMQFactoryProperties = activeMQFactoryProperties;
         this.listenerProperties = listenerProperties;
         this.registry = registry;
-        this.topicMEssageHandlerStrategy = topicMEssageHandlerStrategy;
+        this.topicMessageHandlerStrategy = topicMessageHandlerStrategy;
     }
 
     @PostConstruct
     public void registerListeners() {
-        listenerProperties.getListener().forEach(config -> {
-            log.info("Registering listener clientId={}, topic={}, handler={}",
-                    config.getClientId(), config.getDestination(), config.getHandlerBean());
+        listenerProperties.getListener().forEach((key,config) -> {
+            log.info("Registering listener name={}, clientId={}, topic={}, handler={}",
+                    key, config.getClientId(), config.getDestination(), config.getHandlerBean());
             registerDynamicListener(config);
         });
     }
@@ -69,8 +66,7 @@ public class DynamicListenerLoader {
         endpoint.setSubscription(topicListenerConfig.getSubscription());
         endpoint.setMessageListener(message -> {
             try {
-                String text = message.getBody(String.class);
-                topicMEssageHandlerStrategy.getActiveMQTopicMessageHandler(topicListenerConfig.getHandlerBean()).handleMessage(text);
+                topicMessageHandlerStrategy.getActiveMQTopicMessageHandler(topicListenerConfig.getHandlerBean()).handleMessage(message, topicListenerConfig.getOutbound());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -81,9 +77,10 @@ public class DynamicListenerLoader {
     private DefaultJmsListenerContainerFactory createFactory(ActiveMQListenerProperties.TopicListenerConfig topicListenerConfig) {
         // fresh connection per listener
         ActiveMQConnectionFactory amqFactory = new ActiveMQConnectionFactory();
-        amqFactory.setBrokerURL(brokerUrl);
-        amqFactory.setUserName(username);
-        amqFactory.setPassword(password);
+        amqFactory.setTrustedPackages(List.of("merboxel.example.activemq"));
+        amqFactory.setBrokerURL(activeMQFactoryProperties.getBrokerUrl());
+        amqFactory.setUserName(activeMQFactoryProperties.getUsername());
+        amqFactory.setPassword(activeMQFactoryProperties.getPassword());
         amqFactory.setClientID(topicListenerConfig.getClientId()); // unique per listener
 
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();

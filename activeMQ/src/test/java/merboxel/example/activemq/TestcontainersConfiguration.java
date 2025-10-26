@@ -1,4 +1,4 @@
-package merboxel.example.activeMQ;
+package merboxel.example.activemq;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
