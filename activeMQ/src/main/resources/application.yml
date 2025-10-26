@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: activeMQ
+  jms:
+    pub-sub-domain: true
+
+activemq:
+  listener:
+    - client-id: customer1
+      subscription: sub1
+      destination: example-topic-1
+      handler-bean: customer1
+    - client-id: customer2
+      subscription: sub2
+      destination: example-topic-2
+      handler-bean: customer2
