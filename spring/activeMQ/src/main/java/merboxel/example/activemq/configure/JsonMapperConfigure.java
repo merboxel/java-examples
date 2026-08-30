@@ -2,13 +2,13 @@ package merboxel.example.activemq.configure;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Component
-public class ObjectMapperConfigure {
+public class JsonMapperConfigure {
 
     @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
+    public JsonMapper jsonMapper() {
+        return JsonMapper.builder().build();
     }
 }

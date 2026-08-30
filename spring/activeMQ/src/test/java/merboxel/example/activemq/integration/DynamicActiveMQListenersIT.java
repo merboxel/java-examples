@@ -16,7 +16,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.activemq.ActiveMQContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.Duration;
 import java.util.stream.IntStream;
@@ -57,15 +57,15 @@ class DynamicActiveMQListenersIT {
     @Test
     void testDynamicListenersReceiveMessages() {
 
-        ObjectMapper objMapper = new ObjectMapper();
+        JsonMapper jsonMapper = new JsonMapper();
 
         int numberOfMessages = 10;
 
         // Publish 1000 messages
         IntStream.range(0,numberOfMessages).forEach(i -> {
             jmsTemplate.setMessageConverter(new SimpleMessageConverter());
-            jmsTemplate.convertAndSend("example-topic-1", objMapper.writeValueAsString(new InboundJsonMessage().setMessage("topic-1 hello-"+i)));
-            jmsTemplate.convertAndSend("example-topic-2", objMapper.writeValueAsString(new InboundJsonMessage().setMessage("topic-2 hello-"+i)));
+            jmsTemplate.convertAndSend("example-topic-1", jsonMapper.writeValueAsString(new InboundJsonMessage().setMessage("topic-1 hello-"+i)));
+            jmsTemplate.convertAndSend("example-topic-2", jsonMapper.writeValueAsString(new InboundJsonMessage().setMessage("topic-2 hello-"+i)));
         });
 
         // Wait for the listeners to consume messages

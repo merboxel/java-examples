@@ -28,3 +28,11 @@ activemq:
       destination: example-topic-1
       handler-bean: stringToXml
       outbound: "https://endpoint4.dummy"
+
+oauth:
+  keycloak:
+    client_id: abc
+    password: Qwerty!
+  msentra:
+    client_id: zyx
+    password: 1234

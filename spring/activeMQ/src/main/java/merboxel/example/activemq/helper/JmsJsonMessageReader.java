@@ -2,14 +2,14 @@ package merboxel.example.activemq.helper;
 
 import jakarta.jms.Message;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Component
 public class JmsJsonMessageReader {
 
-    private final ObjectMapper mapper;
+    private final JsonMapper mapper;
 
-    public JmsJsonMessageReader(ObjectMapper mapper) {
+    public JmsJsonMessageReader(JsonMapper mapper) {
         this.mapper = mapper;
     }
 
